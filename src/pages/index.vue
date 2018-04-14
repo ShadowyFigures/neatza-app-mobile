@@ -12,7 +12,11 @@ import users from '../assets/users'
 export default {
   name: 'PageIndex',
   created () {
-    this.selectUser()
+    if (this.$store.state.user.name) {
+      this.$router.push('/' + this.$store.state.user.name.toLowerCase())
+    } else {
+      this.selectUser()
+    }
   },
   methods: {
     selectUser () {
@@ -31,8 +35,12 @@ export default {
           items: userItems
         }
       }).then((data) => {
-        this.$q.notify(`'Hey ${data}!'`)
-        this.$router.push(data.toLowerCase())
+        this.$store.dispatch('user/save', data).then(() => {
+          this.$q.notify(`'Hey ${data}!'`)
+          this.$router.push(data.toLowerCase())
+        }).catch(error => {
+          this.$q.notify(error.toString())
+        })
       }).catch(() => {
         this.$q.notify('Something went wrong with this app')
       })
