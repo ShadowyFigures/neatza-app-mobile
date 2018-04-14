@@ -15,10 +15,33 @@ export default {
     if (this.$store.state.user.name) {
       this.$router.push('/' + this.$store.state.user.name.toLowerCase())
     } else {
-      this.selectUser()
+      this.authenticate()
     }
   },
   methods: {
+    authenticate () {
+      this.$q.dialog({
+        title: 'Input password',
+        message: 'Please type the password.',
+        prompt: {
+          model: '',
+          type: 'text'
+        },
+        preventClose: true,
+        color: 'secondary'
+      }).then(data => {
+        const crypto = require('crypto')
+        const hash = crypto.createHmac('sha256', '').update(data).digest('hex')
+        if (hash !== '93d3c42f8b993e056a71c5ed629cc84164682e2463b10f4f73b8da99dfdf7bff') {
+          this.authenticate()
+          return
+        }
+        this.selectUser()
+      }).catch(() => {
+        this.$q.notify('An error occured, retrying...')
+        this.authenticate()
+      })
+    },
     selectUser () {
       const userItems = []
       users.forEach(user => {
