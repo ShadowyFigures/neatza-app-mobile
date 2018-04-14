@@ -32,6 +32,7 @@ export default {
         }
       }).then((data) => {
         this.$q.notify(`'Hey ${data}!'`)
+        this.$router.push(data.toLowerCase())
       }).catch(() => {
         this.$q.notify('Something went wrong with this app')
       })
