@@ -17,6 +17,9 @@
 </template>
 
 <style>
+img {
+  max-width: 100%;
+}
 h5 {
   margin: 0;
 }
