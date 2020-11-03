@@ -1,19 +1,30 @@
 
-const routes = [
-  {
-    path: '/',
+import users from '../assets/users'
+
+const defaultRoute = {
+  path: '/',
+  component: () => import('layouts/MainLayout.vue'),
+  children: [
+    { path: '', component: () => import('pages/Index.vue') }
+  ]
+}
+
+const catchAllRoute = {
+  path: '*',
+  component: () => import('pages/Error404.vue')
+}
+
+const routes = []
+routes.push(defaultRoute)
+users.forEach(user => {
+  routes.push({
+    path: '/' + user.name.toLowerCase(),
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') }
+      { path: '', component: () => import('pages/User.vue') }
     ]
-  },
-
-  // Always leave this as last one,
-  // but you can also remove it
-  {
-    path: '*',
-    component: () => import('pages/Error404.vue')
-  }
-]
+  })
+})
+routes.push(catchAllRoute)
 
 export default routes
